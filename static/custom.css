@@ -1,0 +1,100 @@
+/* Ordered by tags, id, and class, then alphabetical */
+
+html * {
+    font-family: "Open Sans" !important;
+}
+
+article img {
+    object-fit: contain !important;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+footer a {
+    color: black;
+}
+
+footer a:hover {
+    color: transparent !important;
+}
+
+footer a .fa-linkedin-in, footer a .fa-github, footer a .fa-twitter {
+    padding: 10px 12.5px 10px 12.5px;
+}
+
+footer a .fa-linkedin-in:hover, footer a .fa-github:hover, footer a .fa-twitter:hover {
+    color: black !important;
+    background-color: white !important;
+}
+
+#logoutForm {
+    display: none;
+}
+
+.btn-primary {
+    background-color: black !important;
+    box-shadow: none;
+}
+
+.btn-primary:hover {
+    background-color: rgb(60, 60, 60) !important;
+    box-shadow: none !important;
+}
+
+.btn-secondary {
+    background-color: rgb(196, 196, 196);
+    color: black !important;
+    box-shadow: none;
+}
+
+.btn-secondary:hover {
+    background-color: rgb(240, 240, 240);
+}
+
+header.masthead::before {
+    border-radius: 50px !important;
+}
+
+.inherit-size {
+    size: inherit !important;
+}
+
+@media (min-width: 576px) {
+    .masthead {
+        margin-top: 10% !important;
+    }
+}
+
+.masthead {
+    border-radius: 50px !important;
+    margin-left: 10% !important;
+    margin-right: 10% !important;
+}
+
+@media (max-width: 576px) {
+    .masthead {
+        margin-top: 20% !important;
+    }
+}
+
+.card-anchor:hover {
+    color: grey !important;
+    transition: color 0.2s ease-in-out;
+}
+
+.card-img-top {
+    min-height: 200px !important;
+}
+
+.navbar-brand, .nav-link {
+    color: black !important;
+}
+
+.navbar-brand:hover, .nav-link:hover {
+    color: grey !important;
+    transition: color 0.2s ease-in-out;
+}
+
+.nav-username:hover {
+    color: black !important;
+}
