@@ -30,11 +30,13 @@ Lastly, there is a password reset function, with the path of /reset. It will sim
 
 6. Fill out description, author, and title in the app.html page.
 
-7. Create a top-level .env file. The file uses these private environment variables exactly, ensure the names of the environment variables match these to avoid issues.
+7. Create a site email to use.
 
-DATABASE*URL=\_YOURCONNECTIONSTRING*
-DEV*URL=\_http://localhost:5173/*
-EMAIL=_YOURSECRETADMINEMAILHERE_
-TWILIO*KEY=\_YOURTWILIOAPIKEYHERE*
-ENV=_DEV_
+8. Create a top-level .env file. The file uses these private environment variables exactly, ensure the names of the environment variables match these to avoid issues.
+
+DATABASEURL=YOURCONNECTIONSTRING
+DEVURL=http://localhost:5173/
+EMAIL=YOURSECRETADMINEMAILHERE
+TWILIOKEY=YOURTWILIOAPIKEYHERE
+ENV=DEV
 SITE=YOURSITEEMAILHERE
