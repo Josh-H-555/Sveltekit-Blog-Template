@@ -32,11 +32,18 @@ Lastly, there is a password reset function, with the path of /reset. It will sim
 
 7. Create a site email to use.
 
-8. Create a top-level .env file. The file uses these private environment variables exactly, ensure the names of the environment variables match these to avoid issues.
+8. Create a top-level .env file. The file uses these private environment variables exactly, ensure the names of the environment variables match these to avoid issues. The environment variables are listed below.
+
+   
 
 DATABASEURL=YOURCONNECTIONSTRING
+
 DEVURL=http://localhost:5173/
+
 EMAIL=YOURSECRETADMINEMAILHERE
+
 TWILIOKEY=YOURTWILIOAPIKEYHERE
+
 ENV=DEV
+
 SITE=YOURSITEEMAILHERE
