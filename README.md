@@ -39,11 +39,16 @@ Lastly, there is a password reset function, with the path of /reset. It will sim
    step, and ensure in the schema.prisma file, you use the correct provider.
    Ensure you migrate the database!
 
-9. Create a top-level .env file. The file uses these private environment variables exactly, ensure the names of the environment variables match these to avoid issues.
+9. Create a top-level .env file. The file uses these private environment variables exactly, ensure the names of the environment variables match these to avoid issues. The environment variables are listed below.
 
-DATABASE*URL=\_YOURCONNECTIONSTRING*
-DEV*URL=\_http://localhost:5173/*
-EMAIL=_YOURSECRETADMINEMAILHERE_
-TWILIO*KEY=\_YOURTWILIOAPIKEYHERE*
-ENV=_DEV_
+DATABASEURL=YOURCONNECTIONSTRING
+
+DEVURL=http://localhost:5173/
+
+EMAIL=YOURSECRETADMINEMAILHERE
+
+TWILIOKEY=YOURTWILIOAPIKEYHERE
+
+ENV=DEV
+
 SITE=YOURSITEEMAILHERE

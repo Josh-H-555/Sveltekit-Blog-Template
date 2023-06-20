@@ -3,7 +3,6 @@ import type { Actions } from './$types';
 import { db } from '$lib/database';
 import { TWILIO_KEY, DEV_URL, EMAIL, SITE } from '$env/static/private';
 import { createRequire } from 'module';
-import { reset } from '__sveltekit/paths';
 
 const require = createRequire(import.meta.url);
 
