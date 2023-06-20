@@ -9,12 +9,12 @@
 <div class="container px-4 px-lg-5 mx-auto">
 	{#if $page.data.posts}
 	{#each $page.data.posts as post}
-	<div class="post-preview">
+	<div class="post-preview" style={post.published ? "" : "opacity: 50%;"}>
 		<a href="{$page.data.blog.slug}/post/{post.slug}">
 			<h2 class="post-title">{post.title}</h2>
 			<h3 class="post-subtitle">{post.subtitle}
 				{#if $page.data.user}
-				<a href="{$page.data.blog.slug}/post/edit/{post.slug}" class="btn btn-secondary float-end rounded-pill">Edit</a>
+				<a style="opacity: 100%;" href="{$page.data.blog.slug}/post/edit/{post.slug}" class="btn btn-secondary float-end rounded-pill">Edit</a>
 				{/if}
 			</h3>
 		</a>
@@ -24,10 +24,12 @@
 			on {post.createdAt.toLocaleDateString()}
 		</p>
 	</div>
-	{/each}
-	{/if}
+
 	<!-- Divider-->
 	<hr class="my-4" />
+
+	{/each}
+	{/if}
 	<!-- Pager-->
 	<div class="d-flex justify-content-end mb-4">
 		{#if $page.data.user}

@@ -7,7 +7,7 @@
 <Header
 	photo={'/src/lib/assets/home-bg.jpg'}
 	title={'Games & Tech!'}
-	subtitle={'Plenty of blogs. Pick one!'}
+	subtitle={'Plenty of blogs. Pick one below!'}
 />
 <!-- Main Content-->
 <div class="container px-4 px-lg-5 mx-auto">

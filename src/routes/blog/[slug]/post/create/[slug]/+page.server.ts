@@ -5,18 +5,20 @@ import { writeFileSync } from 'fs';
 
 let blogId: number;
 let userId: number;
+let path: string;
 
 // ensures only authenticated users can access.
 // note, i don't have to do this in server.ts,
 // i can access $page.data.user on the page.svelte
 // but this seems more secure to me... not sure if that's true.
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ locals, params }) {
+export async function load({ locals, params, url }) {
 	if (!locals.user || locals.user.role != 'ADMIN') {
 		throw redirect(302, '/');
 	}
 	userId = locals.user.id;
 	blogId = parseInt(params.slug);
+	path = url.pathname;
 }
 
 export const actions: Actions = {
@@ -54,11 +56,11 @@ export const actions: Actions = {
 			// correctly turns the image into the correct buffer format to write to
 			let base64Image = Buffer.from(await (_image as File).arrayBuffer());
 
-			writeFileSync(`./src/lib/assets/${_image.name}`, base64Image, 'base64');
+			writeFileSync(`./src/lib/assets/${_image?.name}`, base64Image, 'base64');
 		} catch (error: any) {
 			console.error(error);
 		}
 
-		throw redirect(301, '/');
+		throw redirect(301, path.substring(0, path.indexOf('/post')));
 	}
 };

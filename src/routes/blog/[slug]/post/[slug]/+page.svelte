@@ -11,10 +11,10 @@
 	postUpdateInfo={$page.data.post.createdAt.toLocaleDateString() === $page.data.post.updatedAt.toLocaleDateString() ? '' : `Updated on ${$page.data.post.updatedAt.toLocaleDateString()}`}
 />
 <!-- Post Content-->
-<article class="mb-4">
+<article class="mb-4 postBody">
 	<div class="container px-4 px-lg-5">
 		<div class="row gx-4 gx-lg-5 justify-content-center">
-			<div class="col-md-10 col-lg-8 col-xl-9">
+			<div class="col-md-10 col-lg-10 col-xl-9">
 				{@html $page.data.post.content}
 			</div>
 			<div class="col-md-5 col-lg-4 col-xl-5 mt-4 flex-column align-self-center">

@@ -12,6 +12,11 @@ export async function load({ params, locals }) {
 		}
 	});
 
+	// if blog isn't active and admin isn't logged in, go back to main page
+	if (!_blog || (!_blog.active && !locals.user)) {
+		throw redirect(301, '/');
+	}
+
 	let _posts: any;
 	if (locals.user) {
 		_posts = await db.post.findMany({
@@ -54,11 +59,6 @@ export async function load({ params, locals }) {
 				published: true
 			}
 		});
-	}
-
-	// if blog isn't active and admin isn't logged in, go back to main page
-	if (!_blog.active && !locals.user) {
-		throw redirect(301, '/');
 	}
 
 	let sortedPosts = _posts.sort((a: any, b: any) => {

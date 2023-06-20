@@ -2,6 +2,8 @@
 
 This blog was created using the Sveltekit framework. In addition, it uses Prisma for database connectivity, custom (and quite basic) authentication using bcrypt and session cookies, and Twilio SendGrid for email functionality.
 
+The template is a heavily modified version of Start Bootstrap's "Clean Blog" template.
+
 I will be the first to admit this probably does not adhere to many standards that are typically followed for Sveltekit projects, and may also not utilize the power of Sveltekit as much as it could. This is my first major JS/TS project, while additionally also being my first Sveltekit project. If there are any improvements, feel free to make some!
 
 If you decide to use this template for a blog, there are some TODOs:
@@ -18,7 +20,7 @@ Lastly, there is a password reset function, with the path of /reset. It will sim
 
 # TODO list to create your blog
 
-1. Create a favicon and put it in the static folder.
+1. Create a favicon and replace it in the static folder.
 
 2. Replace the placeholder photos in the assets folder, I recommend making the file names of the replacement photos the same though, to avoid issues.
 
@@ -26,11 +28,18 @@ Lastly, there is a password reset function, with the path of /reset. It will sim
 
 4. Create a Twilio SendGrid account, retrieve the API key.
 
-5. Fill out the links to socials in the Footer component.
+5. Create a site email to that will be the sending email address when using the SendGrid API.
 
-6. Fill out description, author, and title in the app.html page.
+6. Fill out the links to socials in the Footer component.
 
-7. Create a top-level .env file. The file uses these private environment variables exactly, ensure the names of the environment variables match these to avoid issues.
+7. Fill out description, author, and title in the app.html page.
+
+8. Personally, I used PostGreSQL as my database system. This should be compatible
+   with any database system that Prisma supports. Fill out the database URL from the next
+   step, and ensure in the schema.prisma file, you use the correct provider.
+   Ensure you migrate the database!
+
+9. Create a top-level .env file. The file uses these private environment variables exactly, ensure the names of the environment variables match these to avoid issues.
 
 DATABASE*URL=\_YOURCONNECTIONSTRING*
 DEV*URL=\_http://localhost:5173/*

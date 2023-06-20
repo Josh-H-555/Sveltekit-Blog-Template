@@ -1,7 +1,16 @@
 /* Ordered by tags, id, and class, then alphabetical */
 
+
+/* Universal HTML styling */
 html * {
     font-family: "Open Sans" !important;
+}
+
+
+/* Tag stylings */
+a:hover {
+    color: grey !important;
+    transition: color 0.2s ease-in-out;
 }
 
 article img {
@@ -27,10 +36,23 @@ footer a .fa-linkedin-in:hover, footer a .fa-github:hover, footer a .fa-twitter:
     background-color: white !important;
 }
 
+header.masthead::before {
+    border-radius: 50px !important;
+}
+
+
+/* ID stylings */
 #logoutForm {
     display: none;
 }
 
+#mainNav {
+    position: fixed;
+    background-color: white;
+}
+
+
+/* Class stylings */
 .btn-primary {
     background-color: black !important;
     box-shadow: none;
@@ -51,12 +73,24 @@ footer a .fa-linkedin-in:hover, footer a .fa-github:hover, footer a .fa-twitter:
     background-color: rgb(240, 240, 240);
 }
 
-header.masthead::before {
-    border-radius: 50px !important;
+.card-anchor:hover {
+    transform: scale(1.1) !important;
+    color: grey !important;
+    transition: all 0.2s ease-in-out;
+}
+
+.card-img-top {
+    min-height: 200px !important;
 }
 
 .inherit-size {
     size: inherit !important;
+}
+
+.masthead {
+    border-radius: 50px !important;
+    box-shadow: 0 1rem 1.5rem grey;
+
 }
 
 @media (min-width: 576px) {
@@ -65,10 +99,19 @@ header.masthead::before {
     }
 }
 
-.masthead {
-    border-radius: 50px !important;
-    margin-left: 10% !important;
-    margin-right: 10% !important;
+@media (min-width: 1400px) {
+    .masthead {
+        margin-top: 5% !important;
+        margin-left: 20% !important;
+        margin-right: 20% !important;
+    }
+}
+
+@media (max-width: 1400px) {
+    .masthead {
+        margin-left: 10% !important;
+        margin-right: 10% !important;
+    }
 }
 
 @media (max-width: 576px) {
@@ -77,24 +120,24 @@ header.masthead::before {
     }
 }
 
-.card-anchor:hover {
-    color: grey !important;
-    transition: color 0.2s ease-in-out;
-}
-
-.card-img-top {
-    min-height: 200px !important;
-}
-
 .navbar-brand, .nav-link {
     color: black !important;
 }
 
 .navbar-brand:hover, .nav-link:hover {
     color: grey !important;
-    transition: color 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}
+
+.nav-link:hover {
+    transform: scale(1.1) !important;
 }
 
 .nav-username:hover {
     color: black !important;
+    transform: scale(1.0) !important;
+}
+
+.postBody {
+    margin-top: 80px !important;
 }
