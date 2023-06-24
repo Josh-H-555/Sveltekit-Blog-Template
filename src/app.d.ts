@@ -2,7 +2,7 @@
 // for information about these interfaces
 // and what to do when importing types
 
-// i guess interface locals gives access to the user from hooks / layout
+// interface locals gives access to the user from hooks / layout
 /// <reference types="@sveltejs/kit" />
 declare namespace App {
 	interface Locals {
@@ -16,3 +16,6 @@ declare namespace App {
 	// interface Error {}
 	// interface Platform {}
 }
+
+declare module 'bcrypt';
+declare module 'quill';

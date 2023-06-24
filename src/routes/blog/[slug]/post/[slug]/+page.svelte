@@ -1,14 +1,17 @@
 <script>
-	import Header from '$lib/Header.svelte';
+	import Header from '$lib/Components/Header.svelte';
 	import { page } from '$app/stores';
 </script>
 
 <Header
-	photo={'/src/lib/assets/' + encodeURI($page.data.post.image)}
+	photo={encodeURI($page.data.post.imagePath)}
 	title={$page.data.post.title}
 	subtitle={$page.data.post.subtitle}
 	postAuthorInfo={`Posted by ${$page.data.post.author.name} on ${$page.data.post.createdAt.toLocaleDateString()}`}
-	postUpdateInfo={$page.data.post.createdAt.toLocaleDateString() === $page.data.post.updatedAt.toLocaleDateString() ? '' : `Updated on ${$page.data.post.updatedAt.toLocaleDateString()}`}
+	postUpdateInfo={$page.data.post.createdAt.toLocaleDateString() ===
+	$page.data.post.updatedAt.toLocaleDateString()
+		? ''
+		: `Updated on ${$page.data.post.updatedAt.toLocaleDateString()}`}
 />
 <!-- Post Content-->
 <article class="mb-4 postBody">
@@ -21,7 +24,12 @@
 				<p class="mb-0">Liked this post? Check out more!</p>
 			</div>
 			<div class="col-md-5 col-lg-4 col-xl-4 mt-4 justify-content-end" style="display: flex;">
-				<a href="{$page.url.pathname.substring(0, $page.url.pathname.indexOf("/post"))}" class="btn btn-primary btn-rounded">Go Back</a>
+				<a
+					class="btn btn-primary btn-rounded"
+					href={$page.url.pathname.substring(0, $page.url.pathname.indexOf('/post'))}
+				>
+					Go Back
+				</a>
 			</div>
 		</div>
 	</div>

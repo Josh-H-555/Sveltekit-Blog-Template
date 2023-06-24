@@ -7,6 +7,10 @@
 	// without the dynamic data-bs-toggle, the navbar acts strangely on desktop.
 	let innerWidth: any;
 
+	function submitLogout() {
+		(document.getElementById('logoutForm') as HTMLFormElement).submit();
+	}
+
 </script>
 
 <svelte:window bind:innerWidth />
@@ -17,7 +21,7 @@
 		{#if user}
 		<ul class="navbar-nav ms-auto py-4 py-lg-0">
 			<li class="nav-item">
-				<a class="nav-link px-lg-3 py-3 py-lg-4 nav-username">Hello, {user.name}</a>
+				<a href={null} class="nav-link px-lg-3 py-3 py-lg-4 nav-username">Hello, {user.name}</a>
 			</li>
 		</ul>
 		{/if}
@@ -47,8 +51,8 @@
 				{#if user}
 					<li class="nav-item">
 						<!--hacky way to get the the logout button to have the same styling as nav-items-->
-						<a id="logoutButton" onclick="document.getElementById('logoutForm').submit()" class="nav-link px-lg-3 py-3 py-lg-4" href="/">Logout</a>
-						<form id="logoutForm" class="nav-item px-lg-3 py-3 py-lg-3" action="/logout" method="POST" use:enhance>
+						<a on:click={submitLogout} id="logoutButton" class="nav-link px-lg-3 py-3 py-lg-4" href="/">Logout</a>
+						<form use:enhance id="logoutForm" class="nav-item px-lg-3 py-3 py-lg-3" method="POST" action="/logout">
 						</form>
 					</li>
 				{/if}

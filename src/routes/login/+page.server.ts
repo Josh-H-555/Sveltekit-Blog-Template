@@ -1,11 +1,12 @@
 import { redirect, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { db } from '$lib/database';
+import { db } from '$lib/Services/Database';
 import bcrypt from 'bcrypt';
 import { ENV } from '$env/static/private';
+import { CheckCaptcha } from '$lib/Services/Helpers';
 
 // if user is logged in, redirect
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals }: any) => {
 	if (locals.user) {
 		throw redirect(302, '/');
 	}
@@ -19,10 +20,15 @@ export const actions: Actions = {
 		const _email = data.get('email');
 		const _provider = 'email';
 
+		// google recaptcha token
+		const _recaptcha_token = data.get('g-recaptcha-response');
+
+		// ensure no empty values
 		if (typeof _password !== 'string' || !_password || !_email) {
 			return fail(400, { invalid: true });
 		}
 
+		// checks if user exists, if not, return generic login failure.
 		const user = await db.user.findUnique({
 			select: {
 				email: true,
@@ -37,17 +43,24 @@ export const actions: Actions = {
 			return fail(400, { credentials: true });
 		}
 
+		//check if the encrypted password is correct.
 		const passwordCompare = await bcrypt.compare(_password, user.password);
 
 		if (!passwordCompare) {
 			return fail(400, { credentials: true });
 		}
 
-		// sets a cookie for the authenticated user
+		// checks for valid captcha response, redirect if invalid
+		const response = await CheckCaptcha(_recaptcha_token);
+		if (!response.success) {
+			throw redirect(303, '/');
+		}
+
+		// sets a cookie for the authenticated user, http only for security
 		try {
 			const authenticatedUser = await db.user.update({
-				where: { email: user.email },
-				data: { userAuthToken: crypto.randomUUID() }
+				data: { userAuthToken: crypto.randomUUID() },
+				where: { email: user.email }
 			});
 
 			cookies.set('session', authenticatedUser.userAuthToken, {
@@ -58,7 +71,7 @@ export const actions: Actions = {
 				maxAge: 60 * 60 * 24 * 30
 			});
 		} catch {
-			console.log('Unknown issue logging in');
+			console.log('Issue logging in');
 		}
 
 		throw redirect(303, '/');

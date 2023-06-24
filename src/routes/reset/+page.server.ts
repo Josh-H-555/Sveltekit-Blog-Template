@@ -1,8 +1,9 @@
 import { redirect, fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
-import { db } from '$lib/database';
-import { TWILIO_KEY, DEV_URL, EMAIL, SITE } from '$env/static/private';
+import { db } from '$lib/Services/Database';
+import { TWILIO_KEY, DEV_URL, PROD_URL, ENV, SITE } from '$env/static/private';
 import { createRequire } from 'module';
+import { CheckCaptcha, GenerateRegisterSlug } from '$lib/Services/Helpers';
 
 const require = createRequire(import.meta.url);
 
@@ -11,70 +12,83 @@ let resettingUser: any;
 // reset action makes sure the user already has an email and valid password by checking
 // if the slug was consumed. then, send an email from SITE to EMAIL like register.
 export const actions: Actions = {
+	// reset password action
 	reset: async ({ request }) => {
+		// retrieves data from corresponding form
 		const data = await request.formData();
 		const _email = await data.get('email');
 
+		// google recaptcha token
+		const _recaptcha_token = await data.get('g-recaptcha-response');
+
+		if (!_email) {
+			return fail(400, { invalid: true });
+		}
+
+		// check and retrieve user associated with email to reset password for
 		resettingUser = await db.user.findUnique({
-			where: {
-				email: _email as string
-			},
 			select: {
 				email: true,
 				registerSlug: true
+			},
+			where: {
+				email: _email as string
 			}
 		});
 
-		let userEmail = resettingUser.email;
+		// some trickery to throw people off.
+		// not foolproof since we return 400 code,
+		// but necessary to return fail for captcha
+		if (!resettingUser) {
+			return fail(400, { emailSent: true });
+		}
 
 		// if registerSlug is not consumed, the user either isn't registered, or already
 		// sent a reset email
-		if (resettingUser && resettingUser.registerSlug.includes('CONSUMED')) {
-			const registrationSlug = generateRegisterSlug();
+		if (resettingUser.registerSlug.includes('CONSUMED')) {
+			// grab correct site url for the email link
+			let siteURL;
+			if (ENV === 'DEV') {
+				siteURL = DEV_URL;
+			} else {
+				siteURL = PROD_URL;
+			}
+
+			// checks for valid captcha response, redirect if invalid
+			const response = await CheckCaptcha(_recaptcha_token);
+			if (!response.success) {
+				throw redirect(303, '/');
+			}
+
+			// re-use the registration slug for the reset URL.
+			// this is safe, because we check if an email exists
+			// in the register server load.
+			const registrationSlug = GenerateRegisterSlug();
 			resettingUser = await db.user.update({
-				where: {
-					email: _email as string
-				},
 				data: {
 					registerSlug: registrationSlug
+				},
+				where: {
+					email: _email as string
 				}
 			});
+
+			//attempt to send the password reset email via Twilio SendGrid's API.
 			const sgMail = require('@sendgrid/mail');
 			sgMail.setApiKey(TWILIO_KEY);
 			const msg = {
-				to: `${userEmail}`,
+				to: `${resettingUser.email}`,
 				from: `${SITE}`,
 				subject: 'Password Reset',
-				text: `Use this link to reset your password! ${DEV_URL + 'reset/' + registrationSlug}`
+				text: `Use this link to reset your password! ${siteURL + 'reset/' + registrationSlug}`
 			};
-			sgMail
-				.send(msg)
-				.then(() => {
-					console.log('Password reset email sent');
-				})
-				.catch((error: any) => {
-					console.error(error);
-				});
+			try {
+				await sgMail.send(msg);
+				return { emailSent: true };
+			} catch (error: any) {
+				console.error(error);
+				return fail(400, { emailFailed: true });
+			}
 		}
-
-		throw redirect(301, '/login');
 	}
 };
-
-/**
- * Generates and returns a randomized string of characters for a slug
- * @returns randomized string of characters
- */
-function generateRegisterSlug() {
-	const randomCharacters: string = '123456790qwertyuiopasdfghjklzxxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM';
-	let tempSlug: string = '';
-
-	for (let i = 0; i < 16; ++i) {
-		let randomNumber: number = Math.round(Math.random() * (randomCharacters.length - 1));
-		tempSlug += randomCharacters[randomNumber];
-	}
-
-	const slug: string = tempSlug;
-
-	return slug;
-}

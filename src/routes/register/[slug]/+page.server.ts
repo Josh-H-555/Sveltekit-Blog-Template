@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
 import { redirect, fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
-import { db } from '$lib/database';
+import { db } from '$lib/Services/Database';
 import { EMAIL } from '$env/static/private';
 import bcrypt from 'bcrypt';
 
@@ -16,7 +16,12 @@ export const load = (async ({ params }) => {
 		}
 	});
 
-	if (!validUserToRegister || validUserToRegister.email) {
+	// if no user, user is registered, or the slug is the CONSUMED flag, redirect
+	if (
+		!validUserToRegister ||
+		validUserToRegister.email ||
+		validUserToRegister.registerSlug === 'CONSUMED'
+	) {
 		throw redirect(301, '/login');
 	}
 
@@ -26,8 +31,9 @@ export const load = (async ({ params }) => {
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {
-	// the register action ties to the '?/register' action from the form
+	// register account action
 	register: async ({ request }) => {
+		// retrieves data from corresponding form
 		const data = await request.formData();
 		const _name = data.get('name');
 		const _password = data.get('password');
@@ -47,9 +53,8 @@ export const actions: Actions = {
 		}
 
 		try {
-			// attempts to update the user
+			// attempts to update the user, set slug to CONSUMED
 			await db.user.update({
-				where: { id: registeringUser.id },
 				data: {
 					name: _name,
 					email: _email as string,
@@ -58,7 +63,8 @@ export const actions: Actions = {
 					userAuthToken: crypto.randomUUID(),
 					registerSlug: 'CONSUMED',
 					password: await bcrypt.hash(_password, 10)
-				}
+				},
+				where: { id: registeringUser.id }
 			});
 		} catch {
 			return fail(400, { credentials: true });

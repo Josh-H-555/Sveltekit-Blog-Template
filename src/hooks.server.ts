@@ -1,7 +1,8 @@
-import { db } from '$lib/database';
-import { TWILIO_KEY, DEV_URL, EMAIL, SITE } from '$env/static/private';
+import { db } from '$lib/Services/Database';
+import { TWILIO_KEY, DEV_URL, PROD_URL, ENV, EMAIL, SITE } from '$env/static/private';
 import { createRequire } from 'module';
 import type { Handle } from '@sveltejs/kit';
+import { GenerateRegisterSlug } from '$lib/Services/Helpers';
 
 //needed for sendgrid mail
 const require = createRequire(import.meta.url);
@@ -16,8 +17,9 @@ const getStartupUser: object | null = await db.user.findMany({
 // why am i using Object.keys??? i have no idea. i wrote this a while ago.
 // either way, if there are no users, send an email to specified admin email from env
 if (!Object.keys(getStartupUser).length) {
-	const registrationSlug: string = generateRegisterSlug();
+	const registrationSlug: string = GenerateRegisterSlug();
 
+	// create an empty user with a unique registration slug.
 	try {
 		await db.user.create({
 			data: {
@@ -30,45 +32,34 @@ if (!Object.keys(getStartupUser).length) {
 			}
 		});
 	} catch {
-		console.log('Error sending initial startup email');
+		console.log('Error creating startup user');
 	}
 
-	// sends the from SITE to EMAIL email with a generated slugs
+	// use correct URL depending on environment.
+	let siteURL;
+	if (ENV === 'DEV') {
+		siteURL = DEV_URL;
+	} else {
+		siteURL = PROD_URL;
+	}
+
+	// sends email from SITE to EMAIL with a generated slug for registration.
 	const sgMail = require('@sendgrid/mail');
+
 	sgMail.setApiKey(TWILIO_KEY);
 	const msg = {
 		to: `${EMAIL}`,
 		from: `${SITE}`,
 		subject: 'Initial Startup Login',
-		text: `Use this link to register! ${DEV_URL + 'register/' + registrationSlug}`
+		text: `Use this link to register! ${siteURL + 'register/' + registrationSlug}`
 	};
-	sgMail
-		.send(msg)
-		.then(() => {
-			console.log('Initial startup email sent');
-		})
-		.catch((error: any) => {
-			console.error(error);
-		});
-}
-
-/**
- * Generates and returns a randomized string of characters for a slug
- * Probably not necessary, but was fun to build. :)
- * @returns randomized string of characters
- */
-function generateRegisterSlug() {
-	const randomCharacters: string = '123456790qwertyuiopasdfghjklzxxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM';
-	let tempSlug: string = '';
-
-	for (let i = 0; i < 16; ++i) {
-		let randomNumber: number = Math.round(Math.random() * (randomCharacters.length - 1));
-		tempSlug += randomCharacters[randomNumber];
+	try {
+		await sgMail.send(msg);
+		console.log('Initial startup email sent');
+	} catch (error: any) {
+		console.error(error);
+		console.log('Error sending initial startup email');
 	}
-
-	const slug: string = tempSlug;
-
-	return slug;
 }
 
 // handles cookies to ensure the local user is persisted
@@ -81,8 +72,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	const user = await db.user.findUnique({
-		where: { userAuthToken: session },
-		select: { id: true, name: true, role: true }
+		select: { id: true, name: true, role: true },
+		where: { userAuthToken: session }
 	});
 
 	if (user) {

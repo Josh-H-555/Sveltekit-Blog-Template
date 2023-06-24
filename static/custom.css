@@ -49,28 +49,43 @@ header.masthead::before {
 #mainNav {
     position: fixed;
     background-color: white;
+    transition: all 0.5s;
+}
+
+#mainNav.hide {
+    top: -150px;
 }
 
 
 /* Class stylings */
 .btn-primary {
     background-color: black !important;
+    border-color: black !important;
+    border-width: 2px !important;
+    border: solid;
     box-shadow: none;
 }
 
 .btn-primary:hover {
-    background-color: rgb(60, 60, 60) !important;
+    transition: all 0.1s;
+    background-color: rgb(255, 255, 255) !important;
+    color: black !important;
     box-shadow: none !important;
 }
 
 .btn-secondary {
     background-color: rgb(196, 196, 196);
+    border-color: rgb(196, 196, 196) !important;
+    border-width: 2px !important;
+    border: solid;
     color: black !important;
     box-shadow: none;
 }
 
 .btn-secondary:hover {
+    transition: all 0.1s;
     background-color: rgb(240, 240, 240);
+    color: black !important;
 }
 
 .card-anchor:hover {
@@ -93,15 +108,9 @@ header.masthead::before {
 
 }
 
-@media (min-width: 576px) {
-    .masthead {
-        margin-top: 10% !important;
-    }
-}
-
 @media (min-width: 1400px) {
     .masthead {
-        margin-top: 5% !important;
+        margin-top: 10% !important;
         margin-left: 20% !important;
         margin-right: 20% !important;
     }
@@ -111,6 +120,7 @@ header.masthead::before {
     .masthead {
         margin-left: 10% !important;
         margin-right: 10% !important;
+        margin-top: 10% !important;
     }
 }
 

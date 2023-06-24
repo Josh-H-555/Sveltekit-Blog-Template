@@ -6,20 +6,23 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_PRISMA_URL")
+  directUrl         = env("DATABASE_URL_NON_POOLING") // uses a direct connection
+  shadowDatabaseUrl = env("DATABASE_URL_NON_POOLING") // used for migrations
 }
 
 model Blog {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title     String   @unique @db.VarChar(255)
-  subtitle  String   @db.VarChar(255)
-  image     String   @db.VarChar(255)
-  active    Boolean  @default(false)
-  slug      String   @unique
-  posts     Post[]
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  title       String   @unique @db.VarChar(255)
+  subtitle    String   @db.VarChar(255)
+  imageName   String   @db.VarChar(255)
+  imageCDNUrl String   @db.VarChar(255)
+  active      Boolean  @default(false)
+  slug        String   @unique
+  posts       Post[]
 }
 
 model Post {
@@ -28,7 +31,8 @@ model Post {
   updatedAt    DateTime @updatedAt
   title        String   @db.VarChar(255)
   subtitle     String   @db.VarChar(255)
-  image        String   @db.VarChar(255)
+  imageName    String   @db.VarChar(255)
+  imageCDNUrl  String   @db.VarChar(255)
   content      String
   published    Boolean  @default(false)
   slug         String   @unique

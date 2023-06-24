@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
 import { redirect, fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
-import { db } from '$lib/database';
+import { db } from '$lib/Services/Database';
 import bcrypt from 'bcrypt';
 
 let resettingUser: any;
@@ -14,6 +14,7 @@ export const load = (async ({ params }) => {
 		}
 	});
 
+	// if user does not exist, or slug is the CONSUMED flag, redirect.
 	if (!validUserToRegister || validUserToRegister.registerSlug == 'CONSUMED') {
 		throw redirect(301, '/login');
 	}
@@ -26,7 +27,9 @@ export const load = (async ({ params }) => {
 // change action ensures the password and confirmation are both equal, then
 // attempts to update the user's password in the database.
 export const actions: Actions = {
+	// change password action
 	change: async ({ request }) => {
+		// retrieves data from corresponding form
 		const data = await request.formData();
 		const _password = data.get('password');
 		const _confirm = data.get('confirm');
@@ -43,14 +46,14 @@ export const actions: Actions = {
 		try {
 			// attempts to update the user
 			await db.user.update({
-				where: { id: resettingUser.id },
 				data: {
 					password: await bcrypt.hash(_password, 10),
 					registerSlug: 'CONSUMED'
-				}
+				},
+				where: { id: resettingUser.id }
 			});
 		} catch {
-			return fail(400, { credentials: true });
+			return fail(400, { updateFailed: true });
 		}
 
 		throw redirect(301, '/login');

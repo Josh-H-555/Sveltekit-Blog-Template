@@ -7,6 +7,7 @@ export const load: PageServerLoad = async () => {
 
 // eats the cookie to log out
 export const actions: Actions = {
+	// default action, logs out.
 	default({ cookies }) {
 		cookies.set('session', '', {
 			path: '/',
