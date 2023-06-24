@@ -66,16 +66,27 @@ Here is what my .env looks like, obviously without the values attached to them.
 #Private
 
 DATABASE_PRISMA_URL=
+<br>
 DATABASE_URL_NON_POOLING= SAME AS PRISMA_URL
+<br>
 DEV_URL=
+<br>
 PROD_URL=
+<br>
 EMAIL=
+<br>
 TWILIO_KEY=
+<br>
 ENV= (MOSTLY JUST CHECKS IF 'DEV')
+<br>
 SITE=
+<br>
 CLOUDINARY_CLOUD_NAME=
+<br>
 CLOUDINARY_API_KEY=
+<br>
 CLOUDINARY_API_SECRET=
+<br>
 PRIVATE_GOOGLE_SECRET_KEY=
 
 #Public
