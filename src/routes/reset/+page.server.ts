@@ -4,6 +4,7 @@ import { db } from '$lib/Services/Database';
 import { TWILIO_KEY, DEV_URL, PROD_URL, ENV, SITE } from '$env/static/private';
 import { createRequire } from 'module';
 import { CheckCaptcha, GenerateRegisterSlug } from '$lib/Services/Helpers';
+import { MailService } from '@sendgrid/mail';
 
 const require = createRequire(import.meta.url);
 
@@ -74,7 +75,7 @@ export const actions: Actions = {
 			});
 
 			//attempt to send the password reset email via Twilio SendGrid's API.
-			const sgMail = require('@sendgrid/mail');
+			const sgMail = new MailService();
 			sgMail.setApiKey(TWILIO_KEY);
 			const msg = {
 				to: `${resettingUser.email}`,

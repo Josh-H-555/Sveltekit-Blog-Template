@@ -3,6 +3,7 @@ import type { Actions } from './$types';
 import { TWILIO_KEY, EMAIL, SITE } from '$env/static/private';
 import { createRequire } from 'module';
 import { CheckCaptcha } from '$lib/Services/Helpers';
+import { MailService } from '@sendgrid/mail';
 
 const require = createRequire(import.meta.url);
 
@@ -32,7 +33,7 @@ export const actions: Actions = {
 
 		// twilio sendgrid's api to send an email, uses .env variables
 		// send email from SITE to EMAIL, with content provided by user.
-		const sgMail = require('@sendgrid/mail');
+		const sgMail = new MailService();
 		sgMail.setApiKey(TWILIO_KEY);
 		const msg = {
 			to: `${EMAIL}`,

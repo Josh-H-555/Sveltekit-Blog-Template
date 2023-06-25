@@ -3,6 +3,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { writeFileSync } from 'fs';
 import { UploadToCDN } from '$lib/Services/CDNService';
+import { SERVER_TYPE } from '$env/static/private';
 
 let blogId: number;
 let userId: number;
@@ -66,7 +67,9 @@ export const actions: Actions = {
 				In the event of a server rebuild, The app is configured
 				to prioritize reading files locally instead of through the CDN.
 			*/
-			writeFileSync(`./static/assets/${(_image as File)?.name}`, base64Image, 'base64');
+			if (SERVER_TYPE !== 'serverless') {
+				writeFileSync(`/assets/${(_image as File)?.name}`, base64Image, 'base64');
+			}
 
 			// create post
 			await db.post.create({

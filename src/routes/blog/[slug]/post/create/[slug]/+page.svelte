@@ -23,7 +23,7 @@
 
 	//quilljs toolbar options
 	export let toolbarOptions = [
-		[{ header: [1, 2, 3] }, {size: 'small'}, 'link', 'image', 'video'],
+		[{ header: [1, 2, 3, false] }], [{size: ['small', false]}, 'link', 'image', 'video'],
 		['bold', 'italic', 'underline', 'strike'],
 		[{ list: 'ordered' }, { list: 'bullet' }, 'code-block', 'blockquote'],
 		[{ align: [] }],

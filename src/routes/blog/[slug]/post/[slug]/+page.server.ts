@@ -52,7 +52,7 @@ export async function load({ params }: any) {
 	// as an attribute of the object to make things simpler.
 	(_post as any).imagePath = imagePath;
 
-	// if post isn't published, redirect
+	// if post isn't published, or blog isn't active, redirect
 	if (_post.published && _blog?.active) {
 		return {
 			post: _post
