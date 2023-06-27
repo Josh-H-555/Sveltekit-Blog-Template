@@ -23,10 +23,9 @@
 
 	//quilljs toolbar options
 	export let toolbarOptions = [
-		[{ header: [1, 2, 3, false] }], [{size: ['small', false]}, 'link', 'image', 'video'],
-		['bold', 'italic', 'underline', 'strike'],
-		[{ list: 'ordered' }, { list: 'bullet' }, 'code-block', 'blockquote'],
-		[{ align: [] }],
+		[{ header: [1, 2, 3, false] }], [{size: ['small', false]}, 'bold', 'italic', 'underline', 'strike'],
+		['link', 'image', 'video'],
+		[{ list: 'ordered' }, { list: 'bullet' }, 'code-block', 'blockquote', { align: [] }],
 		['clean']
 	];
 
@@ -36,10 +35,12 @@
 
 		quill = new Quill(editor, {
 			modules: {
-				toolbar: toolbarOptions
+				toolbar: toolbarOptions,
 			},
-			theme: 'snow',
-			placeholder: 'Write your story...'
+			theme: 'bubble',
+			placeholder: 'Write your story...',
+			scrollingContainer: '#editor-container',
+			bounds: '#editor-container'
 		});
 	});
 
@@ -85,6 +86,10 @@
 	}
 </script>
 
+<svelte:head>
+	<link href="https://cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
+</svelte:head>
+
 <Header photo={reactiveImage} title={newTitle === '' ? 'Post!' : reactiveTitle} subtitle={newSubtitle === '' ? 'Create a new blog!' : reactiveSubtitle} />
 <div class="container px-1 px-lg-5 mx-auto w-75">
 	<div class="row gx-4 gx-lg-5 justify-content-center">
@@ -105,7 +110,9 @@
 				</div>
 				<div class="px-2 py-4 py-md-2">
 					<label class="form-label" for="content">Content</label>
-					<div bind:this={editor} id="editor-container" />
+					<div id="editor-container">
+						<div bind:this={editor} id="quill-container" />
+					</div>
 				</div>
 				<div class="px-2 py-4 py-md-2">
 					<label class="form-label" for="image">Post Image</label>
@@ -145,7 +152,14 @@
 
 	#editor-container {
 		max-height: 400px !important;
-		overflow: auto !important;
+		overflow-y: auto !important;
+	}
+
+	#quill-container {
+		height: auto;
+		min-height: 100%;
+		margin-left: 20px;
+		margin-right: 20px;
 	}
 
 	/* ===== Scrollbar CSS ===== */
